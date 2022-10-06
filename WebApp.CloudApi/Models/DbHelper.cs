@@ -18,13 +18,15 @@ public class DbHelper {
         _application = application;
     }
 
-    public async Task<AccountResponse> GetAccount(int id) {
+    public async Task<AccountResponse> GetAccount(Guid id) {
         var account = _context.Accounts.Where(m => m.AccountID.Equals(id) 
         && m.AccountID.Equals(_application.Application)).Single();
         return new AccountResponse {
             Email = account.Email,
             FirstName = account.FirstName,
-            LastName = account.LastName
+            LastName = account.LastName,
+            AccountCreated = account.AccountCreated,
+            AccountUpdated = account.AccountUpdated
         };
     }
 
@@ -41,7 +43,7 @@ public class DbHelper {
         return account;
     }
 
-    public async Task<Account> SaveAccount(AccountRequest request) {
+    public async Task<AccountResponse> SaveAccount(AccountRequest request) {
         request.Password = EncryptDecrypt.EncryptString(request.Password, _config.GetValue<string>("Salt"));
         Account account = new Account {
             FirstName = request.FirstName,
@@ -54,13 +56,19 @@ public class DbHelper {
 
         await _context.Accounts.AddAsync(account);
         await _context.SaveChangesAsync();
-        return account;
+        return new AccountResponse {
+            Email = account.Email,
+            FirstName = account.FirstName,
+            LastName = account.LastName,
+            AccountCreated = account.AccountCreated,
+            AccountUpdated = account.AccountUpdated
+        };
     }
 
-     public async Task<Account> UpdateAccount(int id, AccountRequest request) {
+     public async Task<AccountResponse> UpdateAccount(Guid id, AccountRequest request) {
         Account account = _context.Accounts.Where(m => m.AccountID.Equals(id)).First();
-        if(account.AccountID == 0) {
-            return new Account();
+        if(account.AccountID == new Guid()) {
+            return new AccountResponse();
         } else {
             request.Password = EncryptDecrypt.EncryptString(request.Password, _config.GetValue<string>("Salt"));
             account.FirstName = request.FirstName;
@@ -68,6 +76,12 @@ public class DbHelper {
             account.AccountUpdated = DateTime.UtcNow;
         }
         await _context.SaveChangesAsync();
-        return account;
+        return new AccountResponse {
+            Email = account.Email,
+            FirstName = account.FirstName,
+            LastName = account.LastName,
+            AccountCreated = account.AccountCreated,
+            AccountUpdated = account.AccountUpdated
+        };
     }
 }
