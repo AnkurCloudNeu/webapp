@@ -1,6 +1,6 @@
 using System.Security.Principal;
 
-namespace CloudApi.Class;
+namespace WebApp.CloudApi.Class;
 public class AuthenticatedUser : IIdentity
 {
     public AuthenticatedUser(string authenticationType, bool isAuthenticated, string name)

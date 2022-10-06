@@ -1,7 +1,7 @@
-using CloudApi.Model;
+using WebApp.CloudApi.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace CloudApi.EfCore;
+namespace WebApp.CloudApi.EfCore;
 
 public class EF_DataContext: DbContext {
     

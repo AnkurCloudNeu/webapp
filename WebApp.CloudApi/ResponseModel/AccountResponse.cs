@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace CloudApi.ResponseModel;
+namespace WebApp.CloudApi.ResponseModel;
 public class AccountResponse
 { 
     public string FirstName { get; set; } = string.Empty;

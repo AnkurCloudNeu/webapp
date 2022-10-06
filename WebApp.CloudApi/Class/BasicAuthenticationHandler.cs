@@ -2,12 +2,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
-using CloudApi.EfCore;
-using CloudApi.Model;
+using WebApp.CloudApi.EfCore;
+using WebApp.CloudApi.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
-namespace CloudApi.Class;
+namespace WebApp.CloudApi.Class;
 
 // BasicAuthenticationHandler.cs
 public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>

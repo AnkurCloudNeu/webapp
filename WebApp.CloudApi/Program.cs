@@ -1,5 +1,5 @@
-using CloudApi.Class;
-using CloudApi.EfCore;
+using WebApp.CloudApi.Class;
+using WebApp.CloudApi.EfCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;

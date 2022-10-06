@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CloudApi.RequestModel;
+namespace WebApp.CloudApi.RequestModel;
 public class AccountRequest
 { 
     [Required(ErrorMessage = "First Name is required.")]

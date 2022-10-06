@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CloudApi.Helper;
+namespace WebApp.CloudApi.Helper;
 
 public static class EncryptDecrypt
 {

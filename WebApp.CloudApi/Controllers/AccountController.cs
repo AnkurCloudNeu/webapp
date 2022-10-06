@@ -1,10 +1,10 @@
-using CloudApi.Class;
-using CloudApi.EfCore;
-using CloudApi.Model;
-using CloudApi.RequestModel;
+using WebApp.CloudApi.Class;
+using WebApp.CloudApi.EfCore;
+using WebApp.CloudApi.Model;
+using WebApp.CloudApi.RequestModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CloudApi.Controllers;
+namespace WebApp.CloudApi.Controllers;
 
 /// <summary>
 /// Account controller

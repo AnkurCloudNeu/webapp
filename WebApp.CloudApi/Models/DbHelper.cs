@@ -1,9 +1,9 @@
-using CloudApi.EfCore;
-using CloudApi.Helper;
-using CloudApi.RequestModel;
-using CloudApi.ResponseModel;
+using WebApp.CloudApi.EfCore;
+using WebApp.CloudApi.Helper;
+using WebApp.CloudApi.RequestModel;
+using WebApp.CloudApi.ResponseModel;
 
-namespace CloudApi.Model;
+namespace WebApp.CloudApi.Model;
 
 public class DbHelper {
     private EF_DataContext _context;

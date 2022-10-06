@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CloudApi.Model;
+namespace WebApp.CloudApi.Model;
 [Table("account")]
 public class Account
 {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace CloudApi.Class;
+namespace WebApp.CloudApi.Class;
 
 public class BasicAuthorizationAttribute : AuthorizeAttribute
 {
