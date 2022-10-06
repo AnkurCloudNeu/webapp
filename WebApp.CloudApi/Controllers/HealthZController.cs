@@ -1,6 +1,8 @@
+using WebApp.CloudApi.Class;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CloudApi.Controllers;
+namespace WebApp.CloudApi.Controllers;
 
 /// <summary>
 /// Healthz controller

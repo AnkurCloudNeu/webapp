@@ -261,3 +261,7 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+.vscode/launch.json
+.vscode/tasks.json
+WebApp.CloudApi/.vscode/launch.json
+WebApp.CloudApi/.vscode/tasks.json
