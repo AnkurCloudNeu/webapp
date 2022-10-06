@@ -1,6 +1,7 @@
 using CloudApi.EfCore;
 using CloudApi.Helper;
 using CloudApi.RequestModel;
+using CloudApi.ResponseModel;
 
 namespace CloudApi.Model;
 
@@ -14,10 +15,13 @@ public class DbHelper {
         _config = config;
     }
 
-    public async Task<Account> GetAccount(int id) {
+    public async Task<AccountResponse> GetAccount(int id) {
         var account = _context.Accounts.Where(m => m.AccountID.Equals(id)).Single();
-        account.Password = EncryptDecrypt.DecryptString(account.Password, _config.GetValue<string>("Salt"));
-        return account;
+        return new AccountResponse {
+            Email = account.Email,
+            FirstName = account.FirstName,
+            LastName = account.LastName
+        };
     }
 
     public bool GetAccount(string email, string password) {
