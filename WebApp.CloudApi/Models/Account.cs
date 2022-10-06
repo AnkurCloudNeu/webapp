@@ -7,7 +7,7 @@ namespace WebApp.CloudApi.Model;
 public class Account
 {
     [Key,Required]
-    public int AccountID { get; set; }
+    public Guid AccountID { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

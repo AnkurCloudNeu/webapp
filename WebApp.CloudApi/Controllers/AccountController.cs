@@ -27,7 +27,7 @@ public class AccountController : ControllerBase
 
     [BasicAuthorization]
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get(Guid id)
     {
         if (this._application.Application != id) {
             return Unauthorized();
@@ -62,7 +62,7 @@ public class AccountController : ControllerBase
 
     [BasicAuthorization]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, [FromBody] AccountRequest model)
+    public async Task<IActionResult> Put(Guid id, [FromBody] AccountRequest model)
     {
         return Created("", await _db.UpdateAccount(id, model));
     }
