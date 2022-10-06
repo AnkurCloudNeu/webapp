@@ -1,4 +1,5 @@
 using CloudApi.EfCore;
+using CloudApi.Helper;
 using CloudApi.RequestModel;
 
 namespace CloudApi.Model;
@@ -6,23 +7,33 @@ namespace CloudApi.Model;
 public class DbHelper {
     private EF_DataContext _context;
     
-    public DbHelper(EF_DataContext context) {
+    private readonly IConfiguration _config;
+    
+    public DbHelper(EF_DataContext context, IConfiguration config) {
         _context = context;
+        _config = config;
     }
 
     public async Task<Account> GetAccount(int id) {
-        return _context.Accounts.Where(m => m.AccountID.Equals(id)).Single();
+        var account = _context.Accounts.Where(m => m.AccountID.Equals(id)).Single();
+        account.Password = EncryptDecrypt.DecryptString(account.Password, _config.GetValue<string>("Salt"));
+        return account;
     }
 
-    public Account GetAccount(string email, string password) {
-        return _context.Accounts.Where(m => m.Email.Equals(email) && m.Password.Equals(password)).Single();
+    public bool GetAccount(string email, string password) {
+        var account = _context.Accounts.Where(m => m.Email.Equals(email)).Single();
+        string decryptedPassword = EncryptDecrypt.DecryptString(account.Password, _config.GetValue<string>("Salt"));
+        return password == decryptedPassword;
     }
 
     public Account GetAccount(string email) {
-        return _context.Accounts.Where(m => m.Email.Equals(email)).Single();
+        var account = _context.Accounts.Where(m => m.Email.Equals(email)).Single();
+        account.Password = EncryptDecrypt.DecryptString(account.Password, _config.GetValue<string>("Salt"));
+        return account;
     }
 
     public async Task<Account> SaveAccount(AccountRequest request) {
+        request.Password = EncryptDecrypt.EncryptString(request.Password, _config.GetValue<string>("Salt"));
         Account account = new Account {
             FirstName = request.FirstName,
             LastName = request.LastName,
@@ -38,14 +49,13 @@ public class DbHelper {
     }
 
      public async Task<Account> UpdateAccount(int id, AccountRequest request) {
-
         Account account = _context.Accounts.Where(m => m.AccountID.Equals(id)).First();
         if(account.AccountID == 0) {
             return new Account();
         } else {
+            request.Password = EncryptDecrypt.EncryptString(request.Password, _config.GetValue<string>("Salt"));
             account.FirstName = request.FirstName;
             account.LastName = request.LastName;
-            account.Password = request.Password;
             account.AccountUpdated = DateTime.UtcNow;
         }
         await _context.SaveChangesAsync();

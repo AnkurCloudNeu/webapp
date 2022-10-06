@@ -14,12 +14,10 @@ namespace CloudApi.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly DbHelper _db;
-    private readonly IConfiguration _config;
 
     public AccountController(EF_DataContext eF_DataContext, IConfiguration config)
     {
-        _db = new DbHelper(eF_DataContext);
-        _config = config;
+        _db = new DbHelper(eF_DataContext, config);
     }
 
     [BasicAuthorization]

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace CloudApi.Helper;
 
-public class EncryptDecrypt
+public static class EncryptDecrypt
 {
 
     public static string EncryptString(string text, string keyString)
