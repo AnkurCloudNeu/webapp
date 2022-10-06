@@ -7,16 +7,20 @@ namespace WebApp.CloudApi.Model;
 
 public class DbHelper {
     private EF_DataContext _context;
+     private readonly ApplicationInstance _application;
     
     private readonly IConfiguration _config;
     
-    public DbHelper(EF_DataContext context, IConfiguration config) {
+    public DbHelper(EF_DataContext context, IConfiguration config, 
+        ApplicationInstance application) {
         _context = context;
         _config = config;
+        _application = application;
     }
 
     public async Task<AccountResponse> GetAccount(int id) {
-        var account = _context.Accounts.Where(m => m.AccountID.Equals(id)).Single();
+        var account = _context.Accounts.Where(m => m.AccountID.Equals(id) 
+        && m.AccountID.Equals(_application.Application)).Single();
         return new AccountResponse {
             Email = account.Email,
             FirstName = account.FirstName,
@@ -26,6 +30,7 @@ public class DbHelper {
 
     public bool GetAccount(string email, string password) {
         var account = _context.Accounts.Where(m => m.Email.Equals(email)).Single();
+        _application.Application = account.AccountID;
         string decryptedPassword = EncryptDecrypt.DecryptString(account.Password, _config.GetValue<string>("Salt"));
         return password == decryptedPassword;
     }

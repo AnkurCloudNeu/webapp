@@ -6,6 +6,7 @@ using WebApp.CloudApi.EfCore;
 using WebApp.CloudApi.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using WebApp.CloudApi.Helper;
 
 namespace WebApp.CloudApi.Class;
 
@@ -20,11 +21,12 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         UrlEncoder encoder,
         ISystemClock clock,
         EF_DataContext eF_DataContext,
-        IConfiguration config
+        IConfiguration config,
+        ApplicationInstance application
         )
 : base(options, logger, encoder, clock)
     {
-         _db = new DbHelper(eF_DataContext,config);
+         _db = new DbHelper(eF_DataContext,config,application);
     }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()

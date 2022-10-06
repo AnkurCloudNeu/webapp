@@ -3,6 +3,7 @@ using WebApp.CloudApi.EfCore;
 using WebApp.CloudApi.Model;
 using WebApp.CloudApi.RequestModel;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.CloudApi.Helper;
 
 namespace WebApp.CloudApi.Controllers;
 
@@ -14,16 +15,23 @@ namespace WebApp.CloudApi.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly DbHelper _db;
+    private readonly ApplicationInstance _application;
 
-    public AccountController(EF_DataContext eF_DataContext, IConfiguration config)
+    public AccountController(EF_DataContext eF_DataContext, 
+    IConfiguration config, 
+    ApplicationInstance application)
     {
-        _db = new DbHelper(eF_DataContext, config);
+        _db = new DbHelper(eF_DataContext, config, application);
+        this._application = application;
     }
 
     [BasicAuthorization]
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
+        if (this._application.Application != id) {
+            return Unauthorized();
+        }
         return Ok(await _db.GetAccount(id));
     }
 
