@@ -22,6 +22,7 @@ public class DbHelper {
         var account = _context.Accounts.Where(m => m.AccountID.Equals(id) 
         && m.AccountID.Equals(_application.Application)).Single();
         return new AccountResponse {
+            AccountId = account.AccountID,
             Email = account.Email,
             FirstName = account.FirstName,
             LastName = account.LastName,
@@ -57,6 +58,7 @@ public class DbHelper {
         await _context.Accounts.AddAsync(account);
         await _context.SaveChangesAsync();
         return new AccountResponse {
+            AccountId = account.AccountID,
             Email = account.Email,
             FirstName = account.FirstName,
             LastName = account.LastName,
@@ -77,6 +79,7 @@ public class DbHelper {
         }
         await _context.SaveChangesAsync();
         return new AccountResponse {
+            AccountId = account.AccountID,
             Email = account.Email,
             FirstName = account.FirstName,
             LastName = account.LastName,
