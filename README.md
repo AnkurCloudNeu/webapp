@@ -7,7 +7,7 @@
 
 # Installation & Usage
 <h3> Clone the repository</h3>
-git clone git@github.com:AnkurCloudNeu/webapp.git
+git clone git@github.com:AnkurCloudNeu/webapp.git 
 
 # Instructions for Running the SpringBoot Project
 1. Open Terminal.
