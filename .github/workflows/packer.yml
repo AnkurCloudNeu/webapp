@@ -18,6 +18,7 @@ jobs:
       - run: cp webapp.service webapp/webapp.service
       - run: zip -r webapp.zip webapp   
       - run: rm -rf webapp
+      
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
