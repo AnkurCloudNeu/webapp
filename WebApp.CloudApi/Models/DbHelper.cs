@@ -72,7 +72,7 @@ public class DbHelper {
         if(account.AccountID == new Guid()) {
             return new AccountResponse();
         } else {
-            request.Password = EncryptDecrypt.EncryptString(request.Password, _config.GetValue<string>("Salt"));
+            account.Password = EncryptDecrypt.EncryptString(request.Password, _config.GetValue<string>("Salt"));
             account.FirstName = request.FirstName;
             account.LastName = request.LastName;
             account.AccountUpdated = DateTime.UtcNow;
