@@ -13,19 +13,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EF_DataContext>(
     o => o.UseNpgsql(builder.Configuration.GetConnectionString("Ef_Postgres_Db"))
 );
-            
+
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ApplicationInstance>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-    builder.Services
-    .AddAuthentication()
-    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", options => { });
+builder.Services
+.AddAuthentication()
+.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", options => { });
 
-    builder.Services.AddAuthorization(options =>
-    {
-        options.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
-    });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
+});
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -70,5 +70,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.Run();
+if (app.Environment.IsDevelopment())
+{
+    app.Run();
+} else {
+    app.Run("http://0.0.0.0:8080");
+}
