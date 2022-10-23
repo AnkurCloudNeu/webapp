@@ -50,7 +50,6 @@ source "amazon-ebs" "webapp" {
   source_ami    = "${var.source_ami}"
   ssh_username  = "${var.ssh_username}"
   subnet_id     = "${var.subnet_id}"
-  security_group_id  = "sg-00eb5d640ee4bfa9b"
 
   launch_block_device_mappings {
     delete_on_termination = true
@@ -67,15 +66,14 @@ build {
     "source.amazon-ebs.webapp"
   ]
 
-  provisioner "shell" {
-    inline = [
-      "zip -r  webapp.zip WebApp.CloudApi WebApp.Tests .github WebApp.sln"
-    ]
+  provisioner "file" {
+    source      = "../webapp.zip"
+    destination = "/home/ubuntu/webapp.zip"
   }
 
   provisioner "file" {
-    source      = "webapp.zip"
-    destination = "/home/ubuntu/webapp.zip"
+    source      = "./webapp.service"
+    destination = "/tmp/webapp.service"
   }
 
   provisioner "shell" {

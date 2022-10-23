@@ -1,17 +1,15 @@
 [Unit]
 Description=Web App
-After=cloud-final.service
 
 [Service]
-WorkingDirectory=/home/ubuntu/webapp
-ExecStart=/usr/bin/node /home/ubuntu/webapp/server.js
+WorkingDirectory=/home/ubuntu/
+ExecStart=dotnet /home/ubuntu/WebApp.CloudApi/bin/Release/net6.0/WebApp.CloudApi.dll
 Restart=always
 RestartSec=10
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=web-app
-User=ubuntu
+KillSignal=SIGINT
+SyslogIdentifier=Api
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
 
 [Install]
 WantedBy=multi-user.target
-WantedBy=cloud-init.target
