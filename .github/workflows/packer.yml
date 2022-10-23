@@ -14,11 +14,11 @@ jobs:
         uses: actions/checkout@v2
 
       - run: mkdir webapp 
-      - run: cp -R Webapp/CloudApi WebApp.Tests WebApp.sln
+      - run: cp -R Webapp.CloudApi WebApp.Tests WebApp.sln webapp
       - run: cp webapp.service webapp/webapp.service
       - run: zip -r webapp.zip webapp   
       - run: rm -rf webapp
-      
+
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
