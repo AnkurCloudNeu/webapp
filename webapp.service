@@ -10,7 +10,6 @@ KillSignal=SIGINT
 SyslogIdentifier=Api
 User=root
 Environment=ASPNETCORE_ENVIRONMENT=Production
-Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
 
 [Install]
 WantedBy=multi-user.target
