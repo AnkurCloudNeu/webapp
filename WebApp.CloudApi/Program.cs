@@ -18,7 +18,7 @@ Log.Information("Starting web host");
 // Add services to the container.
 // Add services to the container.
 builder.Services.AddDbContext<EF_DataContext>(
-    o => o.UseNpgsql(builder.Configuration.GetConnectionString("Ef_Postgres_Db"))
+    o => o.UseNpgsql("Server=localhost;Database=webappdb;Port=5432;UserId=postgres;Password=postgres;")
 );
 
 builder.Services.AddControllers();
