@@ -1,0 +1,16 @@
+[Unit]
+Description=Web App
+
+[Service]
+WorkingDirectory=/home/ubuntu/
+ExecStart=dotnet /home/ubuntu/webapp/WebApp.CloudApi/bin/Release/net6.0/WebApp.CloudApi.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=Api
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
+
+[Install]
+WantedBy=multi-user.target

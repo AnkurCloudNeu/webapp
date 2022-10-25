@@ -1,0 +1,52 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest
+    name: packer
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - run: mkdir webapp 
+      - run: cp -R WebApp.CloudApi WebApp.Tests WebApp.sln webapp
+      - run: cp webapp.service webapp/webapp.service
+      - run: zip -r webapp.zip webapp   
+      - run: rm -rf webapp
+
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: us-east-1
+
+      - name: Packer Init
+        uses: hashicorp/packer-github-actions@master
+        with:
+          command: init
+          target: cloudapi.pkr.hcl
+
+      # validate templates
+      - name: Validate Template
+        uses: hashicorp/packer-github-actions@master
+        with:
+          command: validate
+          arguments: -syntax-only
+          target: cloudapi.pkr.hcl
+
+      # build artifact
+      - name: Build Artifact
+        uses: hashicorp/packer-github-actions@master
+        with:
+          command: build
+          arguments: "-color=false -on-error=abort"
+          target: cloudapi.pkr.hcl
+        env:
+          PACKER_LOG: 1
