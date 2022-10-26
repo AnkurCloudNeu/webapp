@@ -29,12 +29,12 @@ public class AccountController : ControllerBase
 
     [BasicAuthorization]
     [HttpGet("{id}")]
-    public IActionResult Get(Guid id)
+    public async Task<IActionResult> Get(Guid id)
     {
         if (this._application.Application != id) {
             return Unauthorized();
         }
-        return Ok(_db.GetAccount(id));
+        return Ok(await _db.GetAccount(id));
     }
 
     [HttpPost(Name = "account")]
@@ -54,7 +54,6 @@ public class AccountController : ControllerBase
             {
                 _logger.Log(LogLevel.Error, eventId:0, ex, ex.Message);
             }
-            _logger.LogInformation(" Account Created");
             return Created("", await _db.SaveAccount(account));
         }
         else
