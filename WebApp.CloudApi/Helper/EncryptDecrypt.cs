@@ -31,7 +31,7 @@ public static class EncryptDecrypt
                     Buffer.BlockCopy(iv, 0, result, 0, iv.Length);
                     Buffer.BlockCopy(decryptedContent, 0, result, iv.Length, decryptedContent.Length);
 
-                    return result != null ? Convert.ToBase64String(result) : "";
+                    return Convert.ToBase64String(result);
                 }
             }
         }

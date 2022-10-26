@@ -14,5 +14,5 @@ public class EF_DataContext: DbContext {
     //     modelBuilder.UseSerialColumns();
     // }
 
-    public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<Account> Accounts { get; set; }
 }
