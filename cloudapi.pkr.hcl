@@ -44,7 +44,7 @@ source "amazon-ebs" "webapp" {
     delay_seconds = 120
     max_attempts  = 50
   }
-
+  ami_users = ["954333181119"]
 
   instance_type = "t2.micro"
   source_ami    = "${var.source_ami}"
