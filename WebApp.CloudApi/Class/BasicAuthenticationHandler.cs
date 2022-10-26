@@ -14,7 +14,6 @@ namespace WebApp.CloudApi.Class;
 public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
      private readonly DbHelper _db;
-     private readonly IConfiguration _config;
     public BasicAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
