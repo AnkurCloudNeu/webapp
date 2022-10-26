@@ -16,11 +16,11 @@ public class AccountController : ControllerBase
 {
     private readonly DbHelper _db;
     private readonly ApplicationInstance _application;
-    private readonly ILogger _logger;
+    private readonly ILogger<AccountController> _logger;
 
     public AccountController(EF_DataContext eF_DataContext, 
     IConfiguration config, 
-    ApplicationInstance application, ILogger logger)
+    ApplicationInstance application, ILogger<AccountController> logger)
     {
         _db = new DbHelper(eF_DataContext, config, application);
         this._application = application;
@@ -40,6 +40,7 @@ public class AccountController : ControllerBase
     [HttpPost(Name = "account")]
     public async Task<IActionResult> Post([FromBody] AccountRequest account)
     {
+        _logger.LogInformation("Create Account called");
         if (ModelState.IsValid)
         {
             try
@@ -54,7 +55,7 @@ public class AccountController : ControllerBase
             {
                 _logger.Log(LogLevel.Error, eventId:0, ex, ex.Message);
             }
-            _logger.LogInformation(" Account Created");
+             _logger.LogInformation(" Account Created");
             return Created("", await _db.SaveAccount(account));
         }
         else
