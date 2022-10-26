@@ -18,7 +18,7 @@ public class DbHelper {
         _application = application;
     }
 
-    public async Task<AccountResponse> GetAccount(Guid id) {
+    public AccountResponse GetAccount(Guid id) {
         var account = _context.Accounts.Where(m => m.AccountID.Equals(id) 
         && m.AccountID.Equals(_application.Application)).Single();
         return new AccountResponse {
@@ -39,7 +39,7 @@ public class DbHelper {
     }
 
     public Account GetAccount(string email) {
-        var account = _context.Accounts.Where(m => m.Email.Equals(email)).FirstOrDefault();
+        var account = _context.Accounts.Where(m => m.Email.Equals(email)).First();
         account.Password = EncryptDecrypt.DecryptString(account.Password, _config.GetValue<string>("Salt"));
         return account;
     }
