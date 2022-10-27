@@ -14,4 +14,5 @@ public class Account
     public string Password { get; set; } = string.Empty;
     public DateTime AccountCreated { get; set; }
     public DateTime AccountUpdated { get; set; }   
+    public List<Document> Documents { get; set; }
 }

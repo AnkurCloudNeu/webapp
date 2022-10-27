@@ -106,4 +106,31 @@ public class DbHelper
             AccountUpdated = account.AccountUpdated
         };
     }
+
+    public async Task<DocumentRequest> SaveDocument(DocumentRequest request)
+    {
+        Document document = new Document
+        {
+            BucketPath = request.BucketPath,
+            DocumentCreated = DateTime.UtcNow,
+            Name = request.Name,
+            AccountID = _application.Application
+        };
+        await _context.Documents.AddAsync(document);
+        await _context.SaveChangesAsync();
+        return new DocumentRequest
+        {
+            DocumentID = request.DocumentID,
+            BucketPath = request.BucketPath,
+            DocumentCreated = DateTime.UtcNow,
+            Name = request.Name
+        };
+    }
+
+    public async Task<bool> DeleteDocument(string key) {
+        var doc = _context.Documents.Where(m => m.Name == key).FirstOrDefault();
+        _context.Documents.Remove(doc);
+        return true;
+    }
+
 }
