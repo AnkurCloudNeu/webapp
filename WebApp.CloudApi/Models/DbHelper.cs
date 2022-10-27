@@ -39,6 +39,9 @@ public class DbHelper {
     }
 
     public Account GetAccount(string email) {
+        if (_context.Accounts.ToList().Count == 0) {
+            return new Account();
+        }
         var account = _context.Accounts.Where(m => m.Email.Equals(email)).First();
         account.Password = EncryptDecrypt.DecryptString(account.Password, _config.GetValue<string>("Salt"));
         return account;
