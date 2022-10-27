@@ -6,67 +6,84 @@ namespace WebApp.CloudApi.Helper;
 public static class EncryptDecrypt
 {
 
-    public static string EncryptString(string text, string keyString)
+    public static string EncryptString(string text, string key)
     {
-        var key = Encoding.UTF8.GetBytes(keyString);
+        if (string.IsNullOrEmpty(key))
+            throw new ArgumentException("Key must have valid value.", nameof(key));
+        if (string.IsNullOrEmpty(text))
+            throw new ArgumentException("The text must have valid value.", nameof(text));
 
-        using (var aesAlg = Aes.Create())
+        var buffer = Encoding.UTF8.GetBytes(text);
+        var hash = SHA512.Create();
+        var aesKey = new byte[24];
+        Buffer.BlockCopy(hash.ComputeHash(Encoding.UTF8.GetBytes(key)), 0, aesKey, 0, 24);
+
+        using (var aes = Aes.Create())
         {
-            using (var encryptor = aesAlg.CreateEncryptor(key, aesAlg.IV))
+            if (aes == null)
+                throw new ArgumentException("Parameter must not be null.", nameof(aes));
+
+            aes.Key = aesKey;
+
+            using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
+            using (var resultStream = new MemoryStream())
             {
-                using (var msEncrypt = new MemoryStream())
+                using (var aesStream = new CryptoStream(resultStream, encryptor, CryptoStreamMode.Write))
+                using (var plainStream = new MemoryStream(buffer))
                 {
-                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    using (var swEncrypt = new StreamWriter(csEncrypt))
-                    {
-                        swEncrypt.Write(text);
-                    }
-
-                    var iv = aesAlg.IV;
-
-                    var decryptedContent = msEncrypt.ToArray();
-
-                    var result = new byte[iv.Length + decryptedContent.Length];
-
-                    Buffer.BlockCopy(iv, 0, result, 0, iv.Length);
-                    Buffer.BlockCopy(decryptedContent, 0, result, iv.Length, decryptedContent.Length);
-
-                    return result != null ? Convert.ToBase64String(result) : "";
+                    plainStream.CopyTo(aesStream);
                 }
+
+                var result = resultStream.ToArray();
+                var combined = new byte[aes.IV.Length + result.Length];
+                Array.ConstrainedCopy(aes.IV, 0, combined, 0, aes.IV.Length);
+                Array.ConstrainedCopy(result, 0, combined, aes.IV.Length, result.Length);
+
+                return Convert.ToBase64String(combined);
             }
         }
     }
 
-    public static string DecryptString(string cipherText, string keyString)
+
+    public static string DecryptString(string encryptedText, string key)
     {
-        var fullCipher = Convert.FromBase64String(cipherText);
+        if (string.IsNullOrEmpty(key))
+            throw new ArgumentException("Key must have valid value.", nameof(key));
+        if (string.IsNullOrEmpty(encryptedText))
+            throw new ArgumentException("The encrypted text must have valid value.", nameof(encryptedText));
 
-        var iv = new byte[16];
-        var cipher = new byte[16];
+        var combined = Convert.FromBase64String(encryptedText);
+        var buffer = new byte[combined.Length];
+        var hash = SHA512.Create();
+        var aesKey = new byte[24];
+        Buffer.BlockCopy(hash.ComputeHash(Encoding.UTF8.GetBytes(key)), 0, aesKey, 0, 24);
 
-        Buffer.BlockCopy(fullCipher, 0, iv, 0, iv.Length);
-        Buffer.BlockCopy(fullCipher, iv.Length, cipher, 0, iv.Length);
-        var key = Encoding.UTF8.GetBytes(keyString);
-
-        using (var aesAlg = Aes.Create())
+        using (var aes = Aes.Create())
         {
-            using (var decryptor = aesAlg.CreateDecryptor(key, iv))
+            if (aes == null)
+                throw new ArgumentException("Parameter must not be null.", nameof(aes));
+
+            aes.Key = aesKey;
+
+            var iv = new byte[aes.IV.Length];
+            var ciphertext = new byte[buffer.Length - iv.Length];
+
+            Array.ConstrainedCopy(combined, 0, iv, 0, iv.Length);
+            Array.ConstrainedCopy(combined, iv.Length, ciphertext, 0, ciphertext.Length);
+
+            aes.IV = iv;
+
+            using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
+            using (var resultStream = new MemoryStream())
             {
-                string result;
-                using (var msDecrypt = new MemoryStream(cipher))
+                using (var aesStream = new CryptoStream(resultStream, decryptor, CryptoStreamMode.Write))
+                using (var plainStream = new MemoryStream(ciphertext))
                 {
-                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (var srDecrypt = new StreamReader(csDecrypt))
-                        {
-                            result = srDecrypt.ReadToEnd();
-                        }
-                    }
+                    plainStream.CopyTo(aesStream);
                 }
 
-                return result;
+                return Encoding.UTF8.GetString(resultStream.ToArray());
             }
         }
     }
-
 }
