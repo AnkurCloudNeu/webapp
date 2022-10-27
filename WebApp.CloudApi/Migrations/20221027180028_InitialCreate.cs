@@ -25,10 +25,39 @@ namespace WebApp.CloudApi.Migrations
                 {
                     table.PrimaryKey("PK_account", x => x.AccountID);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "document",
+                columns: table => new
+                {
+                    DocumentID = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    BucketPath = table.Column<string>(type: "text", nullable: false),
+                    DocumentCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AccountID = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_document", x => x.DocumentID);
+                    table.ForeignKey(
+                        name: "FK_document_account_AccountID",
+                        column: x => x.AccountID,
+                        principalTable: "account",
+                        principalColumn: "AccountID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_document_AccountID",
+                table: "document",
+                column: "AccountID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "document");
+
             migrationBuilder.DropTable(
                 name: "account");
         }

@@ -14,5 +14,13 @@ public class EF_DataContext: DbContext {
     //     modelBuilder.UseSerialColumns();
     // }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Document>()
+            .HasOne(p => p.Account)
+            .WithMany(b => b.Documents);
+    }
+
     public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<Document> Documents => Set<Document>();
 }

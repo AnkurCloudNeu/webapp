@@ -54,6 +54,49 @@ namespace WebApp.CloudApi.Migrations
 
                     b.ToTable("account");
                 });
+
+            modelBuilder.Entity("WebApp.CloudApi.Model.Document", b =>
+                {
+                    b.Property<Guid>("DocumentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountID")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BucketPath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DocumentCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("DocumentID");
+
+                    b.HasIndex("AccountID");
+
+                    b.ToTable("document");
+                });
+
+            modelBuilder.Entity("WebApp.CloudApi.Model.Document", b =>
+                {
+                    b.HasOne("WebApp.CloudApi.Model.Account", "Account")
+                        .WithMany("Documents")
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("WebApp.CloudApi.Model.Account", b =>
+                {
+                    b.Navigation("Documents");
+                });
 #pragma warning restore 612, 618
         }
     }
