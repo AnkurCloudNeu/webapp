@@ -70,3 +70,7 @@ if (app.Environment.IsDevelopment())
 } else {
     app.Run("http://0.0.0.0:8080");
 }
+if (Environment.Version.Major >= 6)
+{
+    EnsureGssInitialized();
+}
