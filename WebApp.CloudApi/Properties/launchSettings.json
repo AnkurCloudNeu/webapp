@@ -19,7 +19,9 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "BucketName": "addmonkey",
         "AwsRegion": "us-east-1",
-        "AwsProfile": "demoUser"
+        "AwsProfile": "demoUser",
+        "MasterUsername": "postgres",
+        "MasterPassword":"3edc#EDC"
       }
     },
     "IIS Express": {
@@ -30,7 +32,9 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "BucketName": "addmonkey",
         "AwsRegion": "us-east-1",
-        "AwsProfile": "demoUser"
+        "AwsProfile": "demoUser",
+        "MasterUsername": "postgres",
+        "MasterPassword":"3edc#EDC"
       }
     }
   }

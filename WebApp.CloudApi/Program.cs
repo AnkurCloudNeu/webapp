@@ -12,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Add services to the container.
 builder.Services.AddDbContext<EF_DataContext>(
-    o => o.UseNpgsql("Server=localhost;Database=webappdb;Port=5432;UserId=postgres;Password=postgres;")
+    o => o.UseNpgsql("Server=localhost;Database=webappdb;Port=5432;UserId=" + Environment.GetEnvironmentVariable("MasterUsername") +
+    ";Password=" + Environment.GetEnvironmentVariable("MasterPassword") +";")
 );
 
 builder.Services.AddControllers();
