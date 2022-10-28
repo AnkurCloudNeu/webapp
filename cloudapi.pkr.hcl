@@ -15,7 +15,7 @@ variable "ssh_username" {
 
 variable "subnet_id" {
   type    = string
-  default = "subnet-0085963719902f123"
+  default = "subnet-006906fa6009de30f"
 }
 
 packer {
