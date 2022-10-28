@@ -21,7 +21,10 @@
         "AwsRegion": "us-east-1",
         "AwsProfile": "demoUser",
         "MasterUsername": "postgres",
-        "MasterPassword":"3edc#EDC"
+        "MasterPassword":"3edc#EDC",
+        "Database":"localhost",
+        "DatabaseName":"webappdb",
+        "Port":"5432"
       }
     },
     "IIS Express": {
@@ -34,7 +37,10 @@
         "AwsRegion": "us-east-1",
         "AwsProfile": "demoUser",
         "MasterUsername": "postgres",
-        "MasterPassword":"3edc#EDC"
+        "MasterPassword":"3edc#EDC",
+        "Database":"localhost",
+        "DatabaseName":"webappdb",
+        "Port":"5432"
       }
     }
   }

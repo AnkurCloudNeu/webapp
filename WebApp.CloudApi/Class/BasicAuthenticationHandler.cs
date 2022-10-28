@@ -13,19 +13,17 @@ namespace WebApp.CloudApi.Class;
 // BasicAuthenticationHandler.cs
 public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-     private readonly DbHelper _db;
+     private readonly IDbHelper _db;
     public BasicAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
         ISystemClock clock,
-        EF_DataContext eF_DataContext,
-        IConfiguration config,
-        ApplicationInstance application
+        IDbHelper dbHelper
         )
 : base(options, logger, encoder, clock)
     {
-         _db = new DbHelper(eF_DataContext,config,application);
+        _db = dbHelper;
     }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -51,7 +49,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         var authUsername = authSplit[0];
         var authPassword = authSplit.Length > 1 ? authSplit[1] : throw new Exception("Unable to get password");
         
-        if( !_db.GetAccount(authUsername, authPassword)) {
+        if(string.IsNullOrEmpty(authUsername) || string.IsNullOrEmpty(authPassword) || !_db.GetAccount(authUsername, authPassword)) {
             return Task.FromResult(AuthenticateResult.Fail("The username or password is not correct."));
         }
 

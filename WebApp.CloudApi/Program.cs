@@ -2,19 +2,54 @@ using WebApp.CloudApi.Class;
 using WebApp.CloudApi.EfCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
 using WebApp.CloudApi.Helper;
 using Amazon.S3;
+using WebApp.CloudApi.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Amazon;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+{
+    config.AddJsonFile("sample.json",
+                       optional: true,
+                       reloadOnChange: true);
+});
+
 // Add services to the container.
 // Add services to the container.
-builder.Services.AddDbContext<EF_DataContext>(
-    o => o.UseNpgsql("Server=localhost;Database=webappdb;Port=5432;UserId=" + Environment.GetEnvironmentVariable("MasterUsername") +
-    ";Password=" + Environment.GetEnvironmentVariable("MasterPassword") +";")
-);
+
+GlobalData.Application.Add(new KeyValuePair<string, string>("Database", builder.Configuration["Database"]));
+GlobalData.Application.Add(new KeyValuePair<string, string>("DatabaseName", builder.Configuration["DatabaseName"]));
+GlobalData.Application.Add(new KeyValuePair<string, string>("DatabasePort", builder.Configuration["DatabasePort"]));
+GlobalData.Application.Add(new KeyValuePair<string, string>("MasterUsername", builder.Configuration["MasterUsername"]));
+GlobalData.Application.Add(new KeyValuePair<string, string>("MasterPassword", builder.Configuration["MasterPassword"]));
+GlobalData.Application.Add(new KeyValuePair<string, string>("BucketName", builder.Configuration["BucketName"]));
+// builder.Services.AddDbContext<EF_DataContext>();
+// builder.Services.AddDbContext<EF_DataContext>(options =>
+// {
+//     options.UseNpgsql("Host=testdb1.cbd0o3qojchd.us-east-1.rds.amazonaws.com;Database=postgrestest;Port=5432;Username=postgres;Password=postgres;");
+// });
+// builder.Services.AddDbContext<EF_DataContext>(options =>
+// {
+//     options.UseNpgsql("Host=testdb1.cbd0o3qojchd.us-east-1.rds.amazonaws.com;Database=postgrestest;Port=5432;Username=postgres;Password=postgres;");
+// });
+builder.Services.AddDbContext<EF_DataContext>(options =>
+{
+    options.UseNpgsql("Host=" +
+        GlobalData.Application.Where(s => s.Key == "Database").FirstOrDefault().Value +
+        ";Database=" + GlobalData.Application.Where(s => s.Key == "DatabaseName").FirstOrDefault().Value +
+        ";Port=" + GlobalData.Application.Where(s => s.Key == "DatabasePort").FirstOrDefault().Value +
+        ";Username=" + GlobalData.Application.Where(s => s.Key == "MasterUsername").FirstOrDefault().Value + ";Password=" +
+        GlobalData.Application.Where(s => s.Key == "MasterPassword").FirstOrDefault().Value);
+});
+// builder.Services.AddDbContext<EF_DataContext>(
+//     o => o.UseNpgsql("Server=" + builder.Configuration["Database"] +";Database=" + builder.Configuration["DatabaseName"]
+//      +";Port=" + builder.Configuration["DatabasePort"] +";UserId=" + builder.Configuration["MasterUsername"] +
+//     ";Password=" + builder.Configuration["MasterPassword"] +";")
+// );
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ApplicationInstance>();
@@ -23,14 +58,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services
 .AddAuthentication()
 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", options => { });
-
+builder.Services.AddScoped<IDbHelper, DbHelper>();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
 });
 
-builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions {
-    Profile = Environment.GetEnvironmentVariable("AwsProfile")
+builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
+{
+    Profile = builder.Configuration["AwsProfile"],
+    Region = RegionEndpoint.USIsoEast1
 });
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddSwaggerGen(options =>
@@ -74,6 +111,8 @@ app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
     app.Run();
-} else {
+}
+else
+{
     app.Run("http://0.0.0.0:8080");
 }

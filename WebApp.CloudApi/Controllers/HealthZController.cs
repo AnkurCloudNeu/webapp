@@ -23,16 +23,13 @@ public class HealthZController : ControllerBase
     };
 
     private readonly IAmazonS3 _s3Client;
-    private readonly ApplicationInstance _application;
-    private readonly DbHelper _db;
+    private readonly IDbHelper _db;
     public HealthZController(ILogger<HealthZController> logger,
     IAmazonS3 s3Client,
-    EF_DataContext eF_DataContext,
-    IConfiguration config,
-    ApplicationInstance application)
+    IDbHelper dbHelper)
     {
         logger = logger;
-        _db = new DbHelper(eF_DataContext, config, application);
+        _db = dbHelper;
         _s3Client = s3Client;
     }
 
@@ -50,7 +47,7 @@ public class HealthZController : ControllerBase
     [HttpPost(Name = "document")]
     public async Task<IActionResult> UploadFileAsync(IFormFile file, string? prefix)
     {
-        string bucketName = Environment.GetEnvironmentVariable("BucketName");
+        string bucketName = GlobalData.Application.Where(s => s.Key == "BucketName").FirstOrDefault().Value;
         var bucketExists = await _s3Client.DoesS3BucketExistAsync(bucketName);
         string key = string.IsNullOrEmpty(prefix) ? file.FileName : $"{prefix?.TrimEnd('/')}/{file.FileName}";
         if (!bucketExists)
@@ -85,7 +82,7 @@ public class HealthZController : ControllerBase
     [HttpGet("document")]
     public async Task<IActionResult> GetFileByKeyAsync(string key)
     {
-        string bucketName = Environment.GetEnvironmentVariable("BucketName");
+        string bucketName = GlobalData.Application.Where(s => s.Key == "BucketName").FirstOrDefault().Value;
         var bucketExists = await _s3Client.DoesS3BucketExistAsync(bucketName);
         if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
         var s3Object = await _s3Client.GetObjectAsync(bucketName, key);
@@ -96,7 +93,7 @@ public class HealthZController : ControllerBase
     [HttpDelete("document")]
     public async Task<IActionResult> DeleteFileAsync(string key)
     {
-        string bucketName = Environment.GetEnvironmentVariable("BucketName");
+        string bucketName = GlobalData.Application.Where(s => s.Key == "BucketName").FirstOrDefault().Value;
         var bucketExists = await _s3Client.DoesS3BucketExistAsync(bucketName);
         if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist");
         await _s3Client.DeleteObjectAsync(bucketName, key);
