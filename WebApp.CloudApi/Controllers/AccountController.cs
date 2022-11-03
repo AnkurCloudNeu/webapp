@@ -14,15 +14,15 @@ namespace WebApp.CloudApi.Controllers;
 [Route("[controller]")]
 public class AccountController : ControllerBase
 {
-    private readonly DbHelper _db;
+    private readonly IDbHelper _db;
     private readonly ApplicationInstance _application;
     private readonly ILogger<AccountController> _logger;
 
-    public AccountController(EF_DataContext eF_DataContext, 
-    IConfiguration config, 
+    public AccountController(
+    IDbHelper db,
     ApplicationInstance application, ILogger<AccountController> logger)
     {
-        _db = new DbHelper(eF_DataContext, config, application);
+        _db = db;
         this._application = application;
         _logger = logger;
     }

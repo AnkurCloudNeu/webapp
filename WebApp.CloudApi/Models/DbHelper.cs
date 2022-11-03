@@ -5,7 +5,7 @@ using WebApp.CloudApi.ResponseModel;
 
 namespace WebApp.CloudApi.Model;
 
-public class DbHelper
+public class DbHelper :IDbHelper
 {
     private EF_DataContext _context;
     string key = "E546C8DF278CD5931069B522E695D4F2";

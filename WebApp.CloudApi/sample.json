@@ -1,0 +1,9 @@
+{
+    "Database": "testdb1.cbd0o3qojchd.us-east-1.rds.amazonaws.com",
+    "MasterUsername": "postgres",
+    "MasterPassword": "postgres",
+    "DatabasePort": "5432",
+    "DatabaseName": "postgrestest",
+    "BucketName": "myvpc-bucket-s3",
+    "AwsProfile": "demoUser"
+  }
