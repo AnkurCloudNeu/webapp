@@ -40,6 +40,8 @@ public class AccountController : ControllerBase
     [HttpPost(Name = "account")]
     public async Task<IActionResult> Post([FromBody] AccountRequest account)
     {
+        string connectionString = $"Host={Environment.GetEnvironmentVariable("Host")};Database={Environment.GetEnvironmentVariable("DatabaseName")};Port={Environment.GetEnvironmentVariable("DatabasePort")};Username={Environment.GetEnvironmentVariable("MasterUsername")};Password={Environment.GetEnvironmentVariable("MasterPassword")};";
+        _logger.LogInformation(connectionString);
         _logger.LogInformation("Create Account called");
         if (ModelState.IsValid)
         {
