@@ -1,8 +1,6 @@
 using WebApp.CloudApi.Class;
 using Microsoft.AspNetCore.Mvc;
 using Amazon.S3;
-using WebApp.CloudApi.EfCore;
-using WebApp.CloudApi.Helper;
 using WebApp.CloudApi.Model;
 using Amazon.S3.Model;
 using WebApp.CloudApi.RequestModel;

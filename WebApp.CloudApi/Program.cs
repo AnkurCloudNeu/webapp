@@ -7,26 +7,20 @@ using Amazon.S3;
 using WebApp.CloudApi.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Amazon;
+using Amazon.Runtime;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
-{
-    config.AddJsonFile("sample.json",
-                       optional: true,
-                       reloadOnChange: true);
-});
-
+DotNetEnv.Env.Load("/home/ubuntu/webapp/WebApp.CloudApi/.env");
 // Add services to the container.
 // Add services to the container.
 
-GlobalData.Application.Add(new KeyValuePair<string, string>("Database", builder.Configuration["Database"]));
-GlobalData.Application.Add(new KeyValuePair<string, string>("DatabaseName", builder.Configuration["DatabaseName"]));
-GlobalData.Application.Add(new KeyValuePair<string, string>("DatabasePort", builder.Configuration["DatabasePort"]));
-GlobalData.Application.Add(new KeyValuePair<string, string>("MasterUsername", builder.Configuration["MasterUsername"]));
-GlobalData.Application.Add(new KeyValuePair<string, string>("MasterPassword", builder.Configuration["MasterPassword"]));
-GlobalData.Application.Add(new KeyValuePair<string, string>("BucketName", builder.Configuration["BucketName"]));
+// GlobalData.Application.Add(new KeyValuePair<string, string>("Database", builder.Configuration["Database"]));
+// GlobalData.Application.Add(new KeyValuePair<string, string>("DatabaseName", builder.Configuration["DatabaseName"]));
+// GlobalData.Application.Add(new KeyValuePair<string, string>("DatabasePort", builder.Configuration["DatabasePort"]));
+// GlobalData.Application.Add(new KeyValuePair<string, string>("MasterUsername", builder.Configuration["MasterUsername"]));
+// GlobalData.Application.Add(new KeyValuePair<string, string>("MasterPassword", builder.Configuration["MasterPassword"]));
+// GlobalData.Application.Add(new KeyValuePair<string, string>("BucketName", builder.Configuration["BucketName"]));
 // builder.Services.AddDbContext<EF_DataContext>();
 // builder.Services.AddDbContext<EF_DataContext>(options =>
 // {
@@ -36,14 +30,11 @@ GlobalData.Application.Add(new KeyValuePair<string, string>("BucketName", builde
 // {
 //     options.UseNpgsql("Host=testdb1.cbd0o3qojchd.us-east-1.rds.amazonaws.com;Database=postgrestest;Port=5432;Username=postgres;Password=postgres;");
 // });
+string connectionString = $"Host={DotNetEnv.Env.GetString("Host")};Database={DotNetEnv.Env.GetString("DatabaseName")};Port={DotNetEnv.Env.GetString("DatabasePort")};Username={DotNetEnv.Env.GetString("MasterUsername")};Password={DotNetEnv.Env.GetString("MasterPassword")};";
+Console.WriteLine(connectionString);
 builder.Services.AddDbContext<EF_DataContext>(options =>
 {
-    options.UseNpgsql("Host=" +
-        GlobalData.Application.Where(s => s.Key == "Database").FirstOrDefault().Value +
-        ";Database=" + GlobalData.Application.Where(s => s.Key == "DatabaseName").FirstOrDefault().Value +
-        ";Port=" + GlobalData.Application.Where(s => s.Key == "DatabasePort").FirstOrDefault().Value +
-        ";Username=" + GlobalData.Application.Where(s => s.Key == "MasterUsername").FirstOrDefault().Value + ";Password=" +
-        GlobalData.Application.Where(s => s.Key == "MasterPassword").FirstOrDefault().Value);
+    options.UseNpgsql(connectionString);
 });
 // builder.Services.AddDbContext<EF_DataContext>(
 //     o => o.UseNpgsql("Server=" + builder.Configuration["Database"] +";Database=" + builder.Configuration["DatabaseName"]
@@ -66,8 +57,7 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
 {
-    Profile = builder.Configuration["AwsProfile"],
-    Region = RegionEndpoint.USIsoEast1
+    Credentials= new BasicAWSCredentials("AKIA54MVQWS762FVW52I","N2flTJqVd3XWCEwohbJGDzyWS7HXBDgpeSwKXNIf")
 });
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddSwaggerGen(options =>
