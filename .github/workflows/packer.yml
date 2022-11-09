@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: ["main, a6-06"]
+    branches: ["main"]
 
 jobs:
   packer:
