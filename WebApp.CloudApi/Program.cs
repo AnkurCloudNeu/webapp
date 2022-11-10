@@ -122,7 +122,7 @@ try
 catch (Exception exception)
 {
     // NLog: catch setup errors
-    logger.Error(exception, "Stopped program because of exception");
+    log.Error(exception, "Stopped program because of exception");
     throw;
 }
 finally
