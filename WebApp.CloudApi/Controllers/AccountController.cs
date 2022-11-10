@@ -4,6 +4,7 @@ using WebApp.CloudApi.Model;
 using WebApp.CloudApi.RequestModel;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.CloudApi.Helper;
+using JustEat.StatsD;
 
 namespace WebApp.CloudApi.Controllers;
 
@@ -17,14 +18,17 @@ public class AccountController : ControllerBase
     private readonly IDbHelper _db;
     private readonly ApplicationInstance _application;
     private readonly ILogger<AccountController> _logger;
+    IStatsDPublisher stats;
 
     public AccountController(
     IDbHelper db,
-    ApplicationInstance application, ILogger<AccountController> logger)
+    ApplicationInstance application, ILogger<AccountController> logger, IStatsDPublisher statsPublisher)
     {
         _db = db;
         this._application = application;
         _logger = logger;
+        stats = statsPublisher;
+        stats.Increment("webapp");
     }
 
     [BasicAuthorization]
@@ -40,8 +44,6 @@ public class AccountController : ControllerBase
     [HttpPost(Name = "account")]
     public async Task<IActionResult> Post([FromBody] AccountRequest account)
     {
-        string connectionString = $"Host={DotNetEnv.Env.GetString("Host")};Database={DotNetEnv.Env.GetString("DatabaseName")};Port={DotNetEnv.Env.GetString("DatabasePort")};Username={DotNetEnv.Env.GetString("MasterUsername")};Password={DotNetEnv.Env.GetString("MasterPassword")};";
-        _logger.LogInformation(connectionString);
         _logger.LogInformation("Create Account called");
         if (ModelState.IsValid)
         {
@@ -55,13 +57,14 @@ public class AccountController : ControllerBase
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, eventId:0, ex, ex.Message);
+                _logger.LogError(ex.Message);
             }
              _logger.LogInformation(" Account Created");
             return Created("", await _db.SaveAccount(account));
         }
         else
         {
+             _logger.LogInformation("Bad Request");
             return BadRequest();
         }
     }
