@@ -38,6 +38,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     DotNetEnv.Env.Load("/home/ubuntu/webapp/WebApp.CloudApi/.env");
+    //DotNetEnv.Env.Load();
     string connectionString = $"Host={DotNetEnv.Env.GetString("Host")};Database={DotNetEnv.Env.GetString("DatabaseName")};Port={DotNetEnv.Env.GetString("DatabasePort")};Username={DotNetEnv.Env.GetString("MasterUsername")};Password={DotNetEnv.Env.GetString("MasterPassword")};";
     builder.Services.AddDbContext<EF_DataContext>(options =>
     {
@@ -110,6 +111,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    app.MigrateDatabase();
     if (app.Environment.IsDevelopment())
     {
         app.Run();
