@@ -16,6 +16,8 @@ using LogLevel = NLog.LogLevel;
 using NLog.Targets;
 using NLog.Config;
 using NLog.AWS.Logger;
+using Amazon.CloudWatch;
+using AspNetCore.Aws.Demo;
 
 // Setup the NLog configuration
 var config = new LoggingConfiguration();
@@ -86,6 +88,14 @@ try
         Console.WriteLine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
     });
 
+    builder.Services.AddLogging(builder =>
+                {
+                    builder.AddConsole();
+                    builder.AddDebug();
+                }
+            );
+    builder.Services.AddAWSService<IAmazonCloudWatch>();
+
     builder.Services.AddStatsD(
     (provider) =>
     {
@@ -111,6 +121,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    app.UseMiddleware<CloudWatchExecutionTimeMiddleware>(); 
     app.MigrateDatabase();
     if (app.Environment.IsDevelopment())
     {
