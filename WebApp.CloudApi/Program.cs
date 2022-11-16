@@ -60,10 +60,7 @@ try
         options.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
     });
 
-    builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
-    {
-        Credentials = new BasicAWSCredentials("AKIA54MVQWS762FVW52I", "N2flTJqVd3XWCEwohbJGDzyWS7HXBDgpeSwKXNIf")
-    });
+    builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
     builder.Services.AddAWSService<IAmazonS3>();
     builder.Services.AddSwaggerGen(options =>
     {
@@ -121,7 +118,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    app.UseMiddleware<CloudWatchExecutionTimeMiddleware>(); 
+    app.UseMiddleware<CloudWatchExecutionTimeMiddleware>();
     app.MigrateDatabase();
     if (app.Environment.IsDevelopment())
     {

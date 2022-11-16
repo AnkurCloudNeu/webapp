@@ -11,11 +11,9 @@ git clone git@github.com:AnkurCloudNeu/webapp.git
 
 # Instructions for Running the Asp.net core web api Project
 1. Open Terminal.
-2. First we need to run migration to create database on server, for that run these two commands. First, "dotnet ef migrations add InitialCreate". 
-3. After running this command successfully, run "dotnet ef database update".
-4. Once db gets created, Run "dotnet run" command to run the API project.
-5. To test whether your api is running, open postman. The endpoint is http://localhost:5215/healthz.
-Note: We are using Dotnet core 5.0 for running the application.
+2. Db gets created automatically when you build the application, Run "dotnet run" command to run the API project.
+3. To test whether your api is running, open postman. The endpoint is http://localhost:5001/healthz.
+Note: We are using Dotnet core 6.0 for running the application.
   
 # Key highlights
  - Dotnet Core
