@@ -18,7 +18,6 @@ using NLog.Config;
 using NLog.AWS.Logger;
 using Amazon.CloudWatch;
 using AspNetCore.Aws.Demo;
-using Newtonsoft.Json;
 
 // Setup the NLog configuration
 var config = new LoggingConfiguration();
