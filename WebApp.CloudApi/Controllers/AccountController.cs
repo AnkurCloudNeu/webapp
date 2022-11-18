@@ -5,6 +5,8 @@ using WebApp.CloudApi.RequestModel;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.CloudApi.Helper;
 using JustEat.StatsD;
+using WebApp.CloudApi.DynamoDb;
+using WebApp.CloudApi.Interface;
 
 namespace WebApp.CloudApi.Controllers;
 
@@ -16,15 +18,20 @@ namespace WebApp.CloudApi.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IDbHelper _db;
+    private readonly IUserCreator _user;
     private readonly ApplicationInstance _application;
     private readonly ILogger<AccountController> _logger;
     IStatsDPublisher stats;
 
     public AccountController(
     IDbHelper db,
-    ApplicationInstance application, ILogger<AccountController> logger, IStatsDPublisher statsPublisher)
+    IUserCreator user,
+    ApplicationInstance application, 
+    ILogger<AccountController> logger, 
+    IStatsDPublisher statsPublisher)
     {
         _db = db;
+        _user = user;
         this._application = application;
         _logger = logger;
         stats = statsPublisher;
@@ -59,8 +66,14 @@ public class AccountController : ControllerBase
             {
                 _logger.LogError(ex.Message);
             }
-             _logger.LogInformation(" Account Created");
-            return Created("", await _db.SaveAccount(account));
+             _logger.LogInformation("Account Created");
+             var data = await _db.SaveAccount(account);
+             if (await _user.CreateUser(data)) {
+                return Created("", data);
+             }
+             else {
+                return BadRequest("Error in dynamo db");
+             }
         }
         else
         {
