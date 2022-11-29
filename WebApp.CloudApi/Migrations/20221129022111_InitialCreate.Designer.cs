@@ -12,7 +12,7 @@ using WebApp.CloudApi.EfCore;
 namespace WebApp.CloudApi.Migrations
 {
     [DbContext(typeof(EF_DataContext))]
-    [Migration("20221115052445_InitialCreate")]
+    [Migration("20221129022111_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,9 @@ namespace WebApp.CloudApi.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("Verified")
+                        .HasColumnType("boolean");
 
                     b.HasKey("AccountID");
 

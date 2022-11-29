@@ -15,7 +15,7 @@ variable "ssh_username" {
 
 variable "subnet_id" {
   type    = string
-  default = "subnet-0ad08cc53c5033c1c"
+  default = "subnet-0190cca6f416d24af"
 }
 
 packer {
@@ -32,7 +32,7 @@ locals {
 }
 
 source "amazon-ebs" "webapp" {
-  profile = "devAccount"
+  profile = "demoUser"
   region          = "${var.aws_region}"
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"

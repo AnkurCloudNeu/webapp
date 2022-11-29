@@ -18,6 +18,12 @@ using NLog.Config;
 using NLog.AWS.Logger;
 using Amazon.CloudWatch;
 using AspNetCore.Aws.Demo;
+using WebApp.CloudApi.DynamoDb;
+using WebApp.CloudApi.Interface;
+using Amazon.DynamoDBv2;
+using Amazon;
+using Amazon.SQS;
+using Amazon.SimpleNotificationService;
 
 // Setup the NLog configuration
 var config = new LoggingConfiguration();
@@ -38,9 +44,8 @@ log.Info("init main");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
     DotNetEnv.Env.Load("/home/ubuntu/webapp/WebApp.CloudApi/.env");
-    //DotNetEnv.Env.Load();
+    // DotNetEnv.Env.Load();
     string connectionString = $"Host={DotNetEnv.Env.GetString("Host")};Database={DotNetEnv.Env.GetString("DatabaseName")};Port={DotNetEnv.Env.GetString("DatabasePort")};Username={DotNetEnv.Env.GetString("MasterUsername")};Password={DotNetEnv.Env.GetString("MasterPassword")};";
     builder.Services.AddDbContext<EF_DataContext>(options =>
     {
@@ -61,7 +66,16 @@ try
     });
 
     builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+    // builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
+    // {
+    //     Credentials = new BasicAWSCredentials("AKIA54MVQWS762FVW52I", "N2flTJqVd3XWCEwohbJGDzyWS7HXBDgpeSwKXNIf"),
+    //     Region = RegionEndpoint.USEast1
+    // });
     builder.Services.AddAWSService<IAmazonS3>();
+    builder.Services.AddAWSService<IAmazonDynamoDB>();
+    builder.Services.AddAWSService<IAmazonSQS>();
+    builder.Services.AddAWSService<IAmazonSimpleNotificationService>();
+    builder.Services.AddTransient<IUserCreator, UserCreator>();
     builder.Services.AddSwaggerGen(options =>
     {
         options.SwaggerDoc("v1", new OpenApiInfo
