@@ -58,15 +58,19 @@ public class DbHelper :IDbHelper
         return account;
     }
 
-    public Account VerifyAccount(string email)
+    public bool VerifyAccount(string email)
     {
         if (_context.Accounts.ToList().Count == 0)
         {
-            return new Account();
+            return false;
         }
         var account = _context.Accounts.Where(m => m.Email.Equals(email)).First();
+        if (account.Verified) {
+            return false;
+        }
         account.Verified = true;
-        return account;
+        _context.SaveChanges();
+        return true;
     }
 
     public async Task<AccountResponse> SaveAccount(AccountRequest request)

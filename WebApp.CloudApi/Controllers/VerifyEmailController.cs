@@ -39,7 +39,7 @@ public class VerifyEmailController : ControllerBase
     [HttpGet("verifyEmail")]
     public IActionResult Get(string email, Guid token)
     {
-        _db.VerifyAccount(email);
-        return Ok("Account has been VerIfied");
+        bool verified = _db.VerifyAccount(email);
+        return verified ?  Ok("Account has been VerIfied") : BadRequest("Email already verified.");
     }
 }

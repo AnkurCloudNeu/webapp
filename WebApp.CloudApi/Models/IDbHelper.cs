@@ -12,6 +12,6 @@ namespace WebApp.CloudApi.Model
         public Task<AccountResponse> UpdateAccount(Guid id, AccountRequest request);
         public Task<DocumentRequest> SaveDocument(DocumentRequest request);
         public Task<bool> DeleteDocument(string key);
-        public Account VerifyAccount(string email);
+        public bool VerifyAccount(string email);
     }
 }
