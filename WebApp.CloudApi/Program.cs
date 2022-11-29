@@ -30,10 +30,10 @@ var config = new LoggingConfiguration();
 config.AddRule(LogLevel.Info, LogLevel.Fatal, new ConsoleTarget());
 
 // Add the AWS Target with minimal configuration
-config.AddRule(LogLevel.Info, LogLevel.Fatal, new AWSTarget()
-{
-    LogGroup = "/dotnet/logging-demo/nlog"
-});
+// config.AddRule(LogLevel.Info, LogLevel.Fatal, new AWSTarget()
+// {
+//     LogGroup = "/dotnet/logging-demo/nlog"
+// });
 
 LogManager.Configuration = config;
 
@@ -44,9 +44,8 @@ log.Info("init main");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    // DotNetEnv.Env.Load();
-    DotNetEnv.Env.Load("/home/ubuntu/webapp/WebApp.CloudApi/.env");
-    //DotNetEnv.Env.Load();
+    // DotNetEnv.Env.Load("/home/ubuntu/webapp/WebApp.CloudApi/.env");
+    DotNetEnv.Env.Load();
     string connectionString = $"Host={DotNetEnv.Env.GetString("Host")};Database={DotNetEnv.Env.GetString("DatabaseName")};Port={DotNetEnv.Env.GetString("DatabasePort")};Username={DotNetEnv.Env.GetString("MasterUsername")};Password={DotNetEnv.Env.GetString("MasterPassword")};";
     builder.Services.AddDbContext<EF_DataContext>(options =>
     {
@@ -66,12 +65,12 @@ try
         options.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
     });
 
-    builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
-    // builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
-    // {
-    //     Credentials = new BasicAWSCredentials("AKIAWH72JVCSHY6QS3MH", "A4RR7XajAKb7EOLu66tBsn6meIY0p+4eSEtsf4Lu"),
-    //     Region = RegionEndpoint.USEast1
-    // });
+    // builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+    builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
+    {
+        Credentials = new BasicAWSCredentials("AKIA54MVQWS762FVW52I", "N2flTJqVd3XWCEwohbJGDzyWS7HXBDgpeSwKXNIf"),
+        Region = RegionEndpoint.USEast1
+    });
     builder.Services.AddAWSService<IAmazonS3>();
     builder.Services.AddAWSService<IAmazonDynamoDB>();
     builder.Services.AddAWSService<IAmazonSQS>();

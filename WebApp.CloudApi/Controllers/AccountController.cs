@@ -45,7 +45,8 @@ public class AccountController : ControllerBase
         if (this._application.Application != id) {
             return Unauthorized();
         }
-        return Ok(_db.GetAccount(id));
+        var data = _db.GetAccount(id);
+        return data != null ? Ok() : Unauthorized();
     }
 
     [HttpPost(Name = "account")]
@@ -67,8 +68,8 @@ public class AccountController : ControllerBase
                 _logger.LogError(ex.Message);
             }
              _logger.LogInformation("Account Created");
-             var data = await _db.SaveAccount(account);
-             if (await _user.CreateUser(data)) {
+             if (await _user.CreateUser(account)) {
+                var data = await _db.SaveAccount(account);
                 return Created("", data);
              }
              else {

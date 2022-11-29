@@ -19,7 +19,8 @@ namespace WebApp.CloudApi.Migrations
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     AccountCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AccountUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    AccountUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Verified = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

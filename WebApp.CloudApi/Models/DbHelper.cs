@@ -21,10 +21,13 @@ public class DbHelper :IDbHelper
         _application = application;
     }
 
-    public AccountResponse GetAccount(Guid id)
+    public AccountResponse? GetAccount(Guid id)
     {
         var account = _context.Accounts.Where(m => m.AccountID.Equals(id)
         && m.AccountID.Equals(_application.Application)).Single();
+        if (!account.Verified) {
+            return null;
+        }
         return new AccountResponse
         {
             AccountId = account.AccountID,
@@ -52,6 +55,17 @@ public class DbHelper :IDbHelper
         }
         var account = _context.Accounts.Where(m => m.Email.Equals(email)).First();
         account.Password = EncryptDecrypt.DecryptString(account.Password, key);
+        return account;
+    }
+
+    public Account VerifyAccount(string email)
+    {
+        if (_context.Accounts.ToList().Count == 0)
+        {
+            return new Account();
+        }
+        var account = _context.Accounts.Where(m => m.Email.Equals(email)).First();
+        account.Verified = true;
         return account;
     }
 
