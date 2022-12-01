@@ -60,7 +60,8 @@ jobs:
           aws-access-key-id: ${{secrets.PROD_AWS_ACCESS_ID}}
           aws-secret-access-key: ${{secrets.PROD_AWS_SECRET_ACCESS_KEY}}
           aws-region: us-east-1
+      
       - run: |
           echo "AMI_ID=$(jq -r '.builds[0].artifact_id' manifest.json | cut -d ":" -f2)" >> $GITHUB_ENV
-          aws ec2 create-launch-template-version --launch-template-id lt-087236c2d1927aef0 --version-description WebVersion2 --source-version 1 --launch-template-data '{"ImageId":${secrets.AMI_ID}}'
+          aws ec2 create-launch-template-version --launch-template-id lt-087236c2d1927aef0 --version-description WebVersion2 --source-version 1 --launch-template-data '{"ImageId":"${{ env.AMI_ID }}"}'
           aws autoscaling start-instance-refresh --auto-scaling-group-name myvpc123-AutoScalingGroup-C5HFCCMI8EFT --strategy Rolling --desired-configuration '{"LaunchTemplate":{"LaunchTemplateName":"myvpc123-launch-template","Version":"$Latest"}}'
