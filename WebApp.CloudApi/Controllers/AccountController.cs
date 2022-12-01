@@ -46,7 +46,7 @@ public class AccountController : ControllerBase
             return Unauthorized();
         }
         var data = _db.GetAccount(id);
-        return data != null ? Ok() : Unauthorized();
+        return data != null ? Ok(data) : Unauthorized();
     }
 
     [HttpPost(Name = "account")]
