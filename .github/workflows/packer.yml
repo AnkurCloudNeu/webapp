@@ -63,5 +63,5 @@ jobs:
       
       - run: |
           echo "AMI_ID=$(jq -r '.builds[0].artifact_id' manifest.json | cut -d ":" -f2)" >> $GITHUB_ENV
-          aws ec2 create-launch-template-version --launch-template-id lt-087236c2d1927aef0 --version-description WebVersion2 --source-version 1 --launch-template-data '{"ImageId":"${{ env.AMI_ID }}"}'
+          aws ec2 create-launch-template-version --launch-template-id lt-0bf05426a7f8cef5e --version-description WebVersion2 --source-version 1 --launch-template-data '{"ImageId":"${{ env.AMI_ID }}"}'
           aws autoscaling start-instance-refresh --auto-scaling-group-name myvpc123-AutoScalingGroup-C5HFCCMI8EFT --strategy Rolling --desired-configuration '{"LaunchTemplate":{"LaunchTemplateName":"myvpc123-launch-template","Version":"$Latest"}}'
