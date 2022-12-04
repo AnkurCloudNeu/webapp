@@ -44,15 +44,7 @@ jobs:
           arguments: -syntax-only
           target: cloudapi.pkr.hcl
 
-      # build artifact
-      - name: Build Artifact
-        uses: hashicorp/packer-github-actions@master
-        with:
-          command: build
-          arguments: "-color=false -on-error=abort"
-          target: cloudapi.pkr.hcl
-        env:
-          PACKER_LOG: 1
+
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1-node16
