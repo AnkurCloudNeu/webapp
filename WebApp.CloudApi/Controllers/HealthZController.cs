@@ -12,7 +12,7 @@ namespace WebApp.CloudApi.Controllers;
 /// Healthz controller
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("health")]
 public class HealthZController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
@@ -35,7 +35,7 @@ public class HealthZController : ControllerBase
     /// Get health status
     /// </summary>
     /// <returns></returns>
-    [HttpGet(Name = "healthz")]
+    [HttpGet(Name = "health")]
     public IEnumerable<String> Get()
     {
         return Summaries;
