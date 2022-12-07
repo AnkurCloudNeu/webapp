@@ -14,7 +14,7 @@ namespace WebApp.CloudApi.Controllers;
 /// Account controller
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("[accounts]")]
 public class AccountController : ControllerBase
 {
     private readonly IDbHelper _db;
