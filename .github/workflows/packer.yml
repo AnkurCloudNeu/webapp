@@ -63,5 +63,5 @@ jobs:
       
       - run: |
           export AMI_ID=$(jq -r '.builds[0].artifact_id' manifest.json | cut -d ":" -f2)
-          aws ec2 create-launch-template-version --launch-template-id lt-00e1a08dcbcf68a41 --version-description WebVersion2 --source-version 1 --launch-template-data  "{\"ImageId\":\"${AMI_ID}\"}"
+          aws ec2 create-launch-template-version --launch-template-id lt-00e1a08dcbcf68a41 --version-description WebVersion3 --source-version 1 --launch-template-data  "{\"ImageId\":\"${AMI_ID}\"}"
           aws autoscaling start-instance-refresh --auto-scaling-group-name myvpc-asg --strategy Rolling --desired-configuration '{"LaunchTemplate":{"LaunchTemplateName":"myvpc-launch-template","Version":"$Latest"}}'
