@@ -66,11 +66,7 @@ try
     });
 
     builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
-    // builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
-    // {
-    //     Credentials = new BasicAWSCredentials("AKIA54MVQWS762FVW52I", "N2flTJqVd3XWCEwohbJGDzyWS7HXBDgpeSwKXNIf"),
-    //     Region = RegionEndpoint.USEast1
-    // });
+
     builder.Services.AddAWSService<IAmazonS3>();
     builder.Services.AddAWSService<IAmazonDynamoDB>();
     builder.Services.AddAWSService<IAmazonSQS>();
